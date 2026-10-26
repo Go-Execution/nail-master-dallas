@@ -231,11 +231,6 @@ export default function Home() {
   return (
     <main>
       <a className="skip-link" href="#content">Skip to content</a>
-      <div className="announcement">
-        <p>Free shipping on continental US orders over $150</p>
-        <a href={`${store}/collections/all`}>Explore what&apos;s new <span>↗</span></a>
-      </div>
-
       <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <button className="icon-button mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
           <Icon name="menu" />
@@ -252,10 +247,15 @@ export default function Home() {
         </a>
         <div className="header-actions">
           <button className="icon-button" aria-label="Search" onClick={() => setSearchOpen(true)}><Icon name="search" /></button>
-          <a className="icon-button desktop-only" aria-label="Account" href={`${store}/account`}><Icon name="user" /></a>
+          <a className="icon-button" aria-label="Account" href={`${store}/account`}><Icon name="user" /></a>
           <a className="icon-button" aria-label="Shopping bag" href={`${store}/cart`}><Icon name="bag" /></a>
         </div>
       </header>
+
+      <div className="announcement">
+        <p>Free shipping on orders over $150 <span>Continental US only</span></p>
+        <a href={`${store}/collections/all`}>Explore what&apos;s new <span>↗</span></a>
+      </div>
 
       <section className="hero" id="content">
         <div className="hero-copy hero-enter">
