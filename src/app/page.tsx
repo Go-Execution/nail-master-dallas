@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useState } from "react";
+import { CSSProperties, FormEvent, useEffect, useState } from "react";
 
 const store = "https://www.nailmasterdallas.com";
 
@@ -82,11 +82,44 @@ function Icon({ name }: { name: "search" | "user" | "bag" | "menu" | "arrow" | "
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen, searchOpen]);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealItems = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    if (reduceMotion) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8%" },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const updateHeader = () => setScrolled(window.scrollY > 48);
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    return () => window.removeEventListener("scroll", updateHeader);
+  }, []);
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -102,22 +135,20 @@ export default function Home() {
         <a href={`${store}/collections/all`}>Explore what&apos;s new <span>↗</span></a>
       </div>
 
-      <header className="site-header">
+      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <button className="icon-button mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
           <Icon name="menu" />
         </button>
-        <nav className="primary-nav" aria-label="Primary navigation">
+        <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#categories">Shop</a>
           <a href={`${store}/collections/all`}>New</a>
           <a href={`${store}/collections/lamps`}>Equipment</a>
+          <a href="#academy">Academy</a>
+          <a href={`${store}/pages/about-us`}>Our story</a>
         </nav>
         <a className="brand" href={store} aria-label="Nail Master Dallas home">
           <Image src="/images/nmd-logo.png" alt="Nail Master Dallas" width={92} height={92} priority />
         </a>
-        <nav className="secondary-nav" aria-label="Resources">
-          <a href="#academy">Academy</a>
-          <a href={`${store}/pages/about-us`}>Our story</a>
-        </nav>
         <div className="header-actions">
           <button className="icon-button" aria-label="Search" onClick={() => setSearchOpen(true)}><Icon name="search" /></button>
           <a className="icon-button desktop-only" aria-label="Account" href={`${store}/account`}><Icon name="user" /></a>
@@ -126,7 +157,7 @@ export default function Home() {
       </header>
 
       <section className="hero" id="content">
-        <div className="hero-copy reveal">
+        <div className="hero-copy hero-enter">
           <p className="eyebrow">CURATED FOR NAIL ARTISTS</p>
           <h1>Tools for your<br /><em>best work.</em></h1>
           <p className="hero-intro">Professional nail essentials, iconic international brands, and expert education—thoughtfully selected in Dallas.</p>
@@ -135,14 +166,14 @@ export default function Home() {
             <a className="text-link" href={`${store}/collections/all`}>View all products</a>
           </div>
         </div>
-        <a className="hero-visual" href={`${store}/collections/echo-fall-winter-collection-by-luxio`} aria-label="Shop the Echo collection">
+        <a className="hero-visual hero-enter" href={`${store}/collections/echo-fall-winter-collection-by-luxio`} aria-label="Shop the Echo collection">
           <Image src="/images/hero-echo.jpg" alt="Echo gel color collection by Akzentz" fill priority sizes="(max-width: 800px) 100vw, 60vw" />
           <span className="hero-tag">NEW / ECHO F·W 26</span>
         </a>
       </section>
 
       <section className="section categories" id="categories">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal>
           <div>
             <p className="eyebrow">START HERE</p>
             <h2>Shop by category</h2>
@@ -150,8 +181,14 @@ export default function Home() {
           <p>Everything in its place. Find the right products for every step of your service.</p>
         </div>
         <div className="category-grid">
-          {categories.map((category) => (
-            <a className={`category-card ${category.className}`} href={category.href} key={category.name}>
+          {categories.map((category, index) => (
+            <a
+              className={`category-card ${category.className}`}
+              href={category.href}
+              key={category.name}
+              data-reveal
+              style={{ "--delay": `${index * 90}ms` } as CSSProperties}
+            >
               <div className="category-card__top"><span>{category.eyebrow}</span><Icon name="arrow" /></div>
               <div className="category-card__image">
                 <Image src={category.image} alt="" fill sizes="(max-width: 700px) 85vw, 25vw" />
@@ -163,13 +200,18 @@ export default function Home() {
       </section>
 
       <section className="section product-section">
-        <div className="section-heading section-heading--inline">
+        <div className="section-heading section-heading--inline" data-reveal>
           <div><p className="eyebrow">JUST IN</p><h2>New & noteworthy</h2></div>
           <a className="text-link" href={`${store}/collections/all`}>Shop all new arrivals <Icon name="arrow" /></a>
         </div>
         <div className="product-grid">
           {products.map((product, index) => (
-            <article className="product-card" key={product.title}>
+            <article
+              className="product-card"
+              key={product.title}
+              data-reveal
+              style={{ "--delay": `${index * 90}ms` } as CSSProperties}
+            >
               <a className="product-card__image" href={product.href}>
                 {index < 2 && <span className="pill">NEW</span>}
                 <Image src={product.image} alt={product.title} fill sizes="(max-width: 700px) 50vw, 25vw" />
@@ -184,11 +226,11 @@ export default function Home() {
       </section>
 
       <section className="equipment-story">
-        <div className="equipment-story__image">
+        <div className="equipment-story__image" data-reveal>
           <Image src="/images/editorial-nails.jpg" alt="Professional nail studio lamp and dust collector" fill sizes="(max-width: 800px) 100vw, 55vw" />
           <span className="image-caption">STUDIO, ELEVATED.</span>
         </div>
-        <div className="equipment-story__copy">
+        <div className="equipment-story__copy" data-reveal>
           <p className="eyebrow">THE PRO EDIT</p>
           <h2>Build a studio<br />that works <em>beautifully.</em></h2>
           <p>Reliable lighting, powerful dust collection, and ergonomic essentials. Professional equipment chosen to make long days feel lighter.</p>
@@ -201,7 +243,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="brands" aria-label="Featured brands">
+      <section className="brands" aria-label="Featured brands" data-reveal>
         <p className="eyebrow">PRO BRANDS WE LOVE</p>
         <div className="brand-list">
           <span>AKZENTZ</span><span>KOKOIST</span><span>STALEKS</span><span>SMART PRO</span><span>ULKA</span><span>LUMINARY</span>
@@ -210,8 +252,8 @@ export default function Home() {
       </section>
 
       <section className="academy" id="academy">
-        <div className="academy-mark" aria-hidden="true">NMD<span>academy</span></div>
-        <div className="academy-copy">
+        <div className="academy-mark" aria-hidden="true" data-reveal>NMD<span>academy</span></div>
+        <div className="academy-copy" data-reveal>
           <p className="eyebrow">LEARN WITH US</p>
           <h2>Technique changes<br />everything.</h2>
           <p>Hands-on education for ambitious nail artists. Learn modern techniques, refine your craft, and grow with a community that gets it.</p>
@@ -220,13 +262,13 @@ export default function Home() {
       </section>
 
       <section className="service-strip">
-        <div><strong>PRO-APPROVED</strong><span>Curated by working nail artists</span></div>
-        <div><strong>FAST SHIPPING</strong><span>Fulfilled with care from Dallas</span></div>
-        <div><strong>REWARDS</strong><span>Earn points while you shop</span></div>
+        <div data-reveal style={{ "--delay": "0ms" } as CSSProperties}><strong>PRO-APPROVED</strong><span>Curated by working nail artists</span></div>
+        <div data-reveal style={{ "--delay": "90ms" } as CSSProperties}><strong>FAST SHIPPING</strong><span>Fulfilled with care from Dallas</span></div>
+        <div data-reveal style={{ "--delay": "180ms" } as CSSProperties}><strong>REWARDS</strong><span>Earn points while you shop</span></div>
       </section>
 
       <footer>
-        <div className="footer-main">
+        <div className="footer-main" data-reveal>
           <div className="footer-brand">
             <Image src="/images/nmd-logo.png" alt="Nail Master Dallas" width={112} height={112} />
             <p>Nailing the best nails.<br />Dallas, Texas.</p>
