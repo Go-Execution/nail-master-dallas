@@ -1,37 +1,99 @@
 "use client";
 
 import Image from "next/image";
-import { CSSProperties, FormEvent, useEffect, useState } from "react";
+import { CSSProperties, FormEvent, PointerEvent, useEffect, useRef, useState } from "react";
 
 const store = "https://www.nailmasterdallas.com";
 
 const categories = [
   {
-    name: "Color & Gel",
-    eyebrow: "01 / COLOR",
-    image: "/images/product-persuasion.png",
+    name: "Accessories",
+    image: "/images/categories/accessories.jpg",
+    href: `${store}/collections/accessories`,
+    className: "category-card--lilac",
+  },
+  {
+    name: "Brushes",
+    image: "/images/categories/brushes.jpg",
+    href: `${store}/collections/brushes`,
+    className: "category-card--blush",
+  },
+  {
+    name: "Chromes & Powders",
+    image: "/images/categories/chromes.jpg",
+    href: `${store}/collections/chrome-powders`,
+    className: "category-card--butter",
+  },
+  {
+    name: "Design",
+    image: "/images/categories/design.jpg",
+    href: `${store}/collections/design`,
+    className: "category-card--mint",
+  },
+  {
+    name: "Equipment",
+    image: "/images/categories/equipment.jpg",
+    href: `${store}/collections/lamps`,
+    className: "category-card--lilac",
+  },
+  {
+    name: "Professional Nail Tools",
+    image: "/images/categories/tools.jpg",
+    href: `${store}/collections/professional-nail-tools`,
+    className: "category-card--blush",
+  },
+  {
+    name: "Bases",
+    image: "/images/categories/bases.png",
+    href: `${store}/collections/acrygel-and-fiberglass`,
+    className: "category-card--butter",
+  },
+  {
+    name: "Tops",
+    image: "/images/categories/tops.png",
+    href: `${store}/collections/tops`,
+    className: "category-card--mint",
+  },
+  {
+    name: "Color Gels",
+    image: "/images/categories/color-gels.png",
     href: `${store}/collections/color-gels`,
     className: "category-card--lilac",
   },
   {
-    name: "Equipment",
-    eyebrow: "02 / STUDIO",
-    image: "/images/product-lamp.jpg",
-    href: `${store}/collections/lamps`,
+    name: "Magnetic Gels & Cat Eyes",
+    image: "/images/categories/magnetic.jpg",
+    href: `${store}/collections/cat-eyes-and-magnetic-gels`,
     className: "category-card--blush",
   },
   {
-    name: "Nail Art",
-    eyebrow: "03 / CREATE",
-    image: "/images/product-rose-quartz.png",
-    href: `${store}/collections/design`,
+    name: "Stamping",
+    image: "/images/categories/stamping.jpg",
+    href: `${store}/collections/stamping`,
     className: "category-card--butter",
   },
   {
-    name: "Tools & Bits",
-    eyebrow: "04 / PRECISION",
-    image: "/images/product-handrest.jpg",
-    href: `${store}/collections/professional-nail-tools`,
+    name: "Nail Bits",
+    image: "/images/categories/nail-bits.jpg",
+    href: `${store}/collections/bits`,
+    className: "category-card--mint",
+  },
+  {
+    name: "Oils, Liquids & Solutions",
+    image: "/images/categories/liquids.jpg",
+    href: `${store}/collections/liquids-and-solutions`,
+    className: "category-card--lilac",
+  },
+  {
+    name: "Pedicure & Foot Care",
+    image: "/images/categories/pedicure.jpg",
+    href: `${store}/collections/pedicure-foot-care`,
+    className: "category-card--blush",
+  },
+  {
+    name: "Sliders & Stickers",
+    image: "/images/categories/stickers.jpg",
+    href: `${store}/collections/sliders-and-stickers`,
     className: "category-card--mint",
   },
 ];
@@ -83,6 +145,8 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const categoryTrack = useRef<HTMLDivElement>(null);
+  const categoryDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0 });
 
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
@@ -125,6 +189,43 @@ export default function Home() {
     event.preventDefault();
     const query = new FormData(event.currentTarget).get("q")?.toString().trim();
     if (query) window.location.href = `${store}/search?q=${encodeURIComponent(query)}`;
+  }
+
+  function scrollCategories(direction: -1 | 1) {
+    const track = categoryTrack.current;
+    if (!track) return;
+    track.scrollBy({ left: direction * track.clientWidth * 0.78, behavior: "smooth" });
+  }
+
+  function startCategoryDrag(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "touch") return;
+    const track = categoryTrack.current;
+    if (!track) return;
+    categoryDrag.current = {
+      active: true,
+      moved: false,
+      startX: event.clientX,
+      scrollLeft: track.scrollLeft,
+    };
+    track.setPointerCapture(event.pointerId);
+    track.classList.add("is-dragging");
+  }
+
+  function moveCategoryDrag(event: PointerEvent<HTMLDivElement>) {
+    const track = categoryTrack.current;
+    const drag = categoryDrag.current;
+    if (!track || !drag.active) return;
+    const distance = event.clientX - drag.startX;
+    if (Math.abs(distance) > 5) drag.moved = true;
+    track.scrollLeft = drag.scrollLeft - distance;
+  }
+
+  function endCategoryDrag(event: PointerEvent<HTMLDivElement>) {
+    const track = categoryTrack.current;
+    if (!track || !categoryDrag.current.active) return;
+    categoryDrag.current.active = false;
+    track.classList.remove("is-dragging");
+    if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
   }
 
   return (
@@ -178,18 +279,38 @@ export default function Home() {
             <p className="eyebrow">START HERE</p>
             <h2>Shop by category</h2>
           </div>
-          <p>Everything in its place. Find the right products for every step of your service.</p>
+          <div className="category-heading-side">
+            <p>Everything in its place. Find the right products for every step of your service.</p>
+            <div className="slider-controls" aria-label="Category slider controls">
+              <button aria-label="Previous categories" onClick={() => scrollCategories(-1)}>←</button>
+              <button aria-label="Next categories" onClick={() => scrollCategories(1)}>→</button>
+            </div>
+          </div>
         </div>
-        <div className="category-grid">
+        <div
+          className="category-grid"
+          ref={categoryTrack}
+          onPointerDown={startCategoryDrag}
+          onPointerMove={moveCategoryDrag}
+          onPointerUp={endCategoryDrag}
+          onPointerCancel={endCategoryDrag}
+          onClickCapture={(event) => {
+            if (categoryDrag.current.moved) {
+              event.preventDefault();
+              event.stopPropagation();
+              categoryDrag.current.moved = false;
+            }
+          }}
+        >
           {categories.map((category, index) => (
             <a
               className={`category-card ${category.className}`}
               href={category.href}
               key={category.name}
               data-reveal
-              style={{ "--delay": `${index * 90}ms` } as CSSProperties}
+              style={{ "--delay": `${(index % 4) * 70}ms` } as CSSProperties}
             >
-              <div className="category-card__top"><span>{category.eyebrow}</span><Icon name="arrow" /></div>
+              <div className="category-card__top"><span>{String(index + 1).padStart(2, "0")} / CATEGORY</span><Icon name="arrow" /></div>
               <div className="category-card__image">
                 <Image src={category.image} alt="" fill sizes="(max-width: 700px) 85vw, 25vw" />
               </div>
