@@ -447,20 +447,36 @@ export default function Home() {
       </section>
 
       <footer>
+        <div className="footer-review" data-reveal>
+          <strong>Judge.me</strong><span>CERTIFIED</span><i />
+          <b>4.8 ★★★★★</b><span>864 reviews</span>
+        </div>
+        <nav className="footer-policy-feature" aria-label="Featured store policies" data-reveal>
+          <a href={`${store}/policies/shipping-policy`}>Shipping policy</a>
+          <span>—</span>
+          <a href={`${store}/policies/refund-policy`}>Return/refund policy</a>
+          <a className="footer-search-link" href={`${store}/search`}>Search</a>
+        </nav>
         <div className="footer-main" data-reveal>
-          <div className="footer-brand">
-            <Image src="/images/nmd-logo.png" alt="Nail Master Dallas" width={112} height={112} />
-            <p>Nailing the best nails.<br />Dallas, Texas.</p>
-          </div>
-          <div className="footer-column"><p>SHOP</p><a href="#categories">Categories</a><a href={`${store}/collections/all`}>New arrivals</a><a href={`${store}/collections/best-of-the-best`}>Best sellers</a><a href={`${store}/collections/on-sale`}>Sale</a></div>
-          <div className="footer-column"><p>LEARN</p><a href={`${store}/collections/nmd-school-classes`}>NMD Academy</a><a href={`${store}/pages/about-us`}>About us</a><a href={`${store}/pages/nmd-rewards`}>Rewards</a><a href={`${store}/blogs/news`}>Journal</a></div>
           <div className="footer-newsletter">
-            <p className="eyebrow">STAY IN THE KNOW</p>
-            <h3>Fresh drops,<br />straight to your inbox.</h3>
-            <form action={`${store}/contact#contact_form`} method="post"><label className="sr-only" htmlFor="email">Email address</label><input id="email" name="contact[email]" type="email" placeholder="Email address" required /><button aria-label="Subscribe"><Icon name="arrow" /></button></form>
+            <h3>Subscribe to our emails</h3>
+            <form action={`${store}/contact#contact_form`} method="post"><label className="sr-only" htmlFor="email">Email address</label><input id="email" name="contact[email]" type="email" placeholder="Email" required /><button aria-label="Subscribe"><Icon name="arrow" /></button></form>
+          </div>
+          <div className="footer-socials">
+            <a className="shop-follow" href={store} aria-label="Follow Nail Master Dallas on Shop"><span>♡</span> Follow on <strong>shop</strong></a>
+            <a className="instagram-link" href="https://www.instagram.com/nailmasterdallas/" aria-label="Nail Master Dallas on Instagram">◎</a>
           </div>
         </div>
-        <div className="footer-bottom"><span>© 2026 Nail Master Dallas</span><div><a href={`${store}/policies/shipping-policy`}>Shipping</a><a href={`${store}/policies/refund-policy`}>Returns</a><a href={`${store}/policies/privacy-policy`}>Privacy</a></div><span>USD / US</span></div>
+        <div className="footer-commerce">
+          <div className="footer-country"><span>Country/region</span><a href={store}>United States | USD $ <b>⌄</b></a></div>
+          <div className="payment-methods" aria-label="Accepted payment methods">
+            {['amazon', 'AMEX', 'Apple Pay', 'Diners', 'Discover', 'G Pay', 'Mastercard', 'PayPal', 'shop', 'VISA'].map((method) => <span key={method}>{method}</span>)}
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026, <a href={store}>NailMasterDallas.Com</a> <a href="https://www.shopify.com/">Powered by Shopify</a></span>
+          <div><a href={`${store}/policies/refund-policy`}>Refund policy</a><a href={`${store}/policies/privacy-policy`}>Privacy policy</a><a href={`${store}/policies/terms-of-service`}>Terms of service</a><a href={`${store}/policies/shipping-policy`}>Shipping policy</a><a href={`${store}/policies/contact-information`}>Contact information</a></div>
+        </div>
       </footer>
 
       <div className={`drawer ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
