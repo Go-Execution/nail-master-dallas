@@ -147,6 +147,8 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const categoryTrack = useRef<HTMLDivElement>(null);
   const categoryDrag = useRef({ active: false, moved: false, startX: 0, scrollLeft: 0 });
+  const categoryAutoPaused = useRef(false);
+  const categoryResumeTimer = useRef<number | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
@@ -185,6 +187,30 @@ export default function Home() {
     return () => window.removeEventListener("scroll", updateHeader);
   }, []);
 
+  useEffect(() => {
+    const track = categoryTrack.current;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!track || reduceMotion) return;
+
+    const interval = window.setInterval(() => {
+      if (categoryAutoPaused.current || categoryDrag.current.active || document.hidden) return;
+
+      const firstCard = track.querySelector<HTMLElement>(".category-card");
+      if (!firstCard) return;
+
+      const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      const step = firstCard.offsetWidth + gap;
+      const end = track.scrollWidth - track.clientWidth;
+      const next = track.scrollLeft + step >= end - 2 ? 0 : track.scrollLeft + step;
+      track.scrollTo({ left: next, behavior: "smooth" });
+    }, 3200);
+
+    return () => {
+      window.clearInterval(interval);
+      if (categoryResumeTimer.current) window.clearTimeout(categoryResumeTimer.current);
+    };
+  }, []);
+
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const query = new FormData(event.currentTarget).get("q")?.toString().trim();
@@ -194,13 +220,33 @@ export default function Home() {
   function scrollCategories(direction: -1 | 1) {
     const track = categoryTrack.current;
     if (!track) return;
+    pauseCategoryAutoSlide();
     track.scrollBy({ left: direction * track.clientWidth * 0.78, behavior: "smooth" });
+  }
+
+  function pauseCategoryAutoSlide(duration = 5000) {
+    categoryAutoPaused.current = true;
+    if (categoryResumeTimer.current) window.clearTimeout(categoryResumeTimer.current);
+    categoryResumeTimer.current = window.setTimeout(() => {
+      categoryAutoPaused.current = false;
+    }, duration);
+  }
+
+  function holdCategoryAutoSlide() {
+    categoryAutoPaused.current = true;
+    if (categoryResumeTimer.current) window.clearTimeout(categoryResumeTimer.current);
+  }
+
+  function resumeCategoryAutoSlide() {
+    if (categoryResumeTimer.current) window.clearTimeout(categoryResumeTimer.current);
+    categoryAutoPaused.current = false;
   }
 
   function startCategoryDrag(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType === "touch") return;
     const track = categoryTrack.current;
     if (!track) return;
+    holdCategoryAutoSlide();
     categoryDrag.current = {
       active: true,
       moved: false,
@@ -226,6 +272,7 @@ export default function Home() {
     categoryDrag.current.active = false;
     track.classList.remove("is-dragging");
     if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+    pauseCategoryAutoSlide();
   }
 
   return (
@@ -298,6 +345,13 @@ export default function Home() {
           onPointerMove={moveCategoryDrag}
           onPointerUp={endCategoryDrag}
           onPointerCancel={endCategoryDrag}
+          onMouseEnter={holdCategoryAutoSlide}
+          onMouseLeave={resumeCategoryAutoSlide}
+          onFocusCapture={holdCategoryAutoSlide}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) resumeCategoryAutoSlide();
+          }}
+          onTouchStart={() => pauseCategoryAutoSlide()}
           onClickCapture={(event) => {
             if (categoryDrag.current.moved) {
               event.preventDefault();
