@@ -231,7 +231,7 @@ export default function Home() {
   return (
     <main>
       <a className="skip-link" href="#content">Skip to content</a>
-      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
+      <header className={`site-header h-auto ${scrolled ? "is-scrolled" : ""}`}>
         <button className="icon-button mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
           <Icon name="menu" />
         </button>
@@ -243,7 +243,7 @@ export default function Home() {
           <a href={`${store}/pages/about-us`}>Our story</a>
         </nav>
         <a className="brand" href={store} aria-label="Nail Master Dallas home">
-          <Image src="/images/nmd-logo.png" alt="Nail Master Dallas" width={92} height={92} priority />
+          <Image src="/images/nmd-logo.png" className="h-auto w-auto" alt="Nail Master Dallas" width={100} height={100} priority />
         </a>
         <div className="header-actions">
           <button className="icon-button" aria-label="Search" onClick={() => setSearchOpen(true)}><Icon name="search" /></button>
@@ -262,9 +262,13 @@ export default function Home() {
           <p className="eyebrow">CURATED FOR NAIL ARTISTS</p>
           <h1>Tools for your<br /><em>best work.</em></h1>
           <p className="hero-intro">Professional nail essentials, iconic international brands, and expert education—thoughtfully selected in Dallas.</p>
-          <div className="button-row">
-            <a className="button button--light" href="#categories">Shop the edit <Icon name="arrow" /></a>
-            <a className="text-link" href={`${store}/collections/all`}>View all products</a>
+          <div className="hero-promo-actions">
+            <a className="button button--brand" href={`${store}/collections/echo-fall-winter-collection-by-luxio`}>
+              New 2027 ECHO COLLECTION
+            </a>
+            <a className="button button--brand" href={`${store}/products/smart-pro-new-desk-lamp-for-manicure`}>
+              New SMART PRO desk lamp
+            </a>
           </div>
         </div>
         <a className="hero-visual hero-enter" href={`${store}/collections/echo-fall-winter-collection-by-luxio`} aria-label="Shop the Echo collection">
