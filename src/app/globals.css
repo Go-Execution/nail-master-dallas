@@ -121,12 +121,12 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-lineca
 .brand-list { margin: 44px 0 48px; display: flex; justify-content: center; flex-wrap: wrap; column-gap: clamp(32px, 6vw, 92px); row-gap: 26px; }
 .brand-list span { font-size: clamp(22px, 2.4vw, 38px); font-weight: 800; letter-spacing: -.045em; }
 .brands .text-link { margin: auto; }
-.academy { min-height: 660px; padding: 90px 7vw; display: grid; grid-template-columns: 1fr 1fr; align-items: center; color: white; background: var(--plum); overflow: hidden; }
+.academy { min-height: 660px; padding: 90px 7vw; display: grid; grid-template-columns: 1fr 1fr; align-items: center; color: var(--ink); background: #f8e5ef; overflow: hidden; }
 .academy-mark { font-size: clamp(82px, 12vw, 190px); font-weight: 900; letter-spacing: -.12em; line-height: .65; transform: rotate(-7deg); opacity: .18; }
 .academy-mark span { display: block; margin-left: 15%; font-family: Georgia, serif; font-size: .38em; font-weight: 400; letter-spacing: -.05em; }
 .academy-copy { max-width: 640px; }
 .academy h2 { font-size: clamp(52px, 6vw, 92px); }
-.academy-copy > p:not(.eyebrow) { max-width: 520px; margin: 34px 0 40px; color: rgba(255,255,255,.72); font-size: 16px; line-height: 1.65; }
+.academy-copy > p:not(.eyebrow) { max-width: 520px; margin: 34px 0 40px; color: #715865; font-size: 16px; line-height: 1.65; }
 .service-strip { padding: 34px 4vw; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--pink); }
 .service-strip > div { padding: 0 4vw; display: flex; flex-direction: column; text-align: center; border-right: 1px solid rgba(37,21,31,.22); }
 .service-strip > div:last-child { border: 0; }
@@ -151,7 +151,7 @@ footer { padding: 54px 4vw 24px; color: white; background: var(--ink); }
 .footer-newsletter input::placeholder, .search-panel input::placeholder { color: rgba(255,255,255,.55); }
 .footer-newsletter button, .search-panel form button { width: 60px; color: white; background: transparent; border: 0; cursor: pointer; }
 .footer-socials { display: flex; align-items: center; justify-content: flex-end; gap: 26px; }
-.shop-follow { padding: 12px 18px; display: inline-flex; align-items: center; gap: 7px; color: white; background: #5735ee; border-radius: 999px; font-size: 17px; font-weight: 600; }
+.shop-follow { padding: 12px 18px; display: inline-flex; align-items: center; gap: 7px; color: white; background: var(--pink); border-radius: 999px; font-size: 17px; font-weight: 600; }
 .shop-follow span { font-size: 28px; line-height: .6; }
 .instagram-link { font-size: 30px; line-height: 1; }
 .footer-commerce { padding: 40px 0; display: flex; align-items: end; justify-content: space-between; gap: 40px; border-top: 1px solid rgba(255,255,255,.14); }
