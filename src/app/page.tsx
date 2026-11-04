@@ -278,7 +278,12 @@ export default function Home() {
   return (
     <main>
       <a className="skip-link" href="#content">Skip to content</a>
-      <header className={`site-header h-auto ${scrolled ? "is-scrolled" : ""}`}>
+      <div className="top-shell">
+      <div className="announcement">
+        <p>Free shipping on orders over $150 <span>Continental US only</span></p>
+        <a href={`${store}/collections/all`}>Explore what&apos;s new <span>↗</span></a>
+      </div>
+      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <button className="icon-button mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}>
           <Icon name="menu" />
         </button>
@@ -298,10 +303,6 @@ export default function Home() {
           <a className="icon-button" aria-label="Shopping bag" href={`${store}/cart`}><Icon name="bag" /></a>
         </div>
       </header>
-
-      <div className="announcement">
-        <p>Free shipping on orders over $150 <span>Continental US only</span></p>
-        <a href={`${store}/collections/all`}>Explore what&apos;s new <span>↗</span></a>
       </div>
 
       <section className="hero" id="content">
@@ -425,7 +426,19 @@ export default function Home() {
       <section className="brands" aria-label="Featured brands" data-reveal>
         <p className="eyebrow">PRO BRANDS WE LOVE</p>
         <div className="brand-list">
-          <span>AKZENTZ</span><span>KOKOIST</span><span>STALEKS</span><span>SMART PRO</span><span>ULKA</span><span>LUMINARY</span>
+          {[
+            ["KOKOIST", "kokoist.png", "https://kokoist.com/"],
+            ["Akzentz", "akzentz.png", "https://akzentz.com/"],
+            ["Luminary Nail Systems", "luminary.png", "https://luminarynailsystems.com/"],
+            ["STALEKS", "staleks.png", "https://staleks.com/"],
+            ["ONAIL", "onail.png", "https://onail.com/"],
+            ["ULKA", "ulka.png", "https://www.ulka-global.com/"],
+            ["SMART PRO", "smartpro.png", "https://www.smartproair.com/"],
+          ].map(([name, image, href]) => (
+            <a href={href} key={name} target="_blank" rel="noopener noreferrer" aria-label={`${name} official website`}>
+              <Image src={`/images/brands/${image}`} alt={name} width={190} height={90} />
+            </a>
+          ))}
         </div>
         <a className="text-link" href={`${store}/collections`}>Discover all brands <Icon name="arrow" /></a>
       </section>
