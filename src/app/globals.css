@@ -119,10 +119,10 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-lineca
 .equipment-story .button { align-self: flex-start; }
 
 .brands { padding: 80px 3.2vw; text-align: center; background: var(--white); overflow: hidden; }
-.brand-list { max-width: 1120px; margin: 38px auto 46px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-.brand-list a { height: 115px; padding: 22px; display: grid; place-items: center; background: #fbf2f7; transition: transform .3s ease, background .3s ease; }
-.brand-list a:hover { transform: translateY(-4px); background: #f5e2ed; }
-.brand-list img { width: 100%; height: 100%; max-width: 190px; object-fit: contain; }
+.brand-list { max-width: 1240px; margin: 38px auto 46px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.brand-list a { height: 110px; position: relative; display: grid; place-items: center; overflow: hidden; background: #fff; border: 1px solid #efdde7; transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.brand-list a:hover { transform: translateY(-4px); border-color: #d998bd; box-shadow: 0 12px 28px rgba(84, 20, 59, .09); }
+.brand-logo-sprite { width: 230px; height: 100px; position: absolute; left: 50%; top: 50%; display: block; background: url("/images/brands/gelessentialz-brand-sprite.png") no-repeat; background-size: 1364px 604px; transform: translate(-50%, -50%) scale(.84); }
 .brands .text-link { margin: auto; }
 .academy { min-height: 560px; padding: 70px 7vw; display: grid; grid-template-columns: 1fr 1fr; align-items: center; color: var(--ink); background: #f8e5ef; overflow: hidden; }
 .academy-mark { font-size: clamp(82px, 12vw, 190px); font-weight: 900; letter-spacing: -.12em; line-height: .65; transform: rotate(-7deg); opacity: .18; }
@@ -222,6 +222,7 @@ footer { padding: 54px 4vw 24px; color: white; background: var(--ink); }
   .equipment-story { grid-template-columns: 1fr; }
   .equipment-story__image { min-height: 620px; }
   .academy { grid-template-columns: .8fr 1.2fr; }
+  .brand-list { grid-template-columns: repeat(3, 1fr); }
   .footer-main { grid-template-columns: 1fr 1fr; }
 }
 
@@ -268,7 +269,8 @@ footer { padding: 54px 4vw 24px; color: white; background: var(--ink); }
   .equipment-story h2 { font-size: 50px; }
   .brands { padding: 66px 18px; }
   .brand-list { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .brand-list a { height: 90px; padding: 16px; }
+  .brand-list a { height: 90px; }
+  .brand-logo-sprite { transform: translate(-50%, -50%) scale(.56); }
   .academy { min-height: 640px; padding: 68px 22px; grid-template-columns: 1fr; }
   .academy-mark { display: none; }
   .academy h2 { font-size: 54px; }

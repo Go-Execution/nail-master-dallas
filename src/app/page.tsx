@@ -129,6 +129,24 @@ const products = [
   },
 ];
 
+const brands = [
+  { name: "Akzentz Professional", position: "-70px -147px" },
+  { name: "Prevention Spa & Salon Disinfectants", position: "-310px -147px" },
+  { name: "Be Care Love Spa", position: "-550px -147px" },
+  { name: "Saeshin America", position: "-790px -147px" },
+  { name: "Chaun Legend Professional Nails", position: "-1030px -147px" },
+  { name: "Luxio by Akzentz", position: "-70px -283px" },
+  { name: "Staleks Pro", position: "-310px -283px" },
+  { name: "Profiles Backstage", position: "-550px -283px" },
+  { name: "Nail Thoughts", position: "-790px -283px" },
+  { name: "Light Elegance", position: "-1030px -283px" },
+  { name: "Redi Red Iguana", position: "-70px -470px" },
+  { name: "Ugly Duckling Nails", position: "-310px -470px" },
+  { name: "Kokoist", position: "-550px -470px" },
+  { name: "Luminary Nail Systems", position: "-790px -470px" },
+  { name: "American Creator", position: "-1030px -470px" },
+];
+
 function Icon({ name }: { name: "search" | "user" | "bag" | "menu" | "arrow" | "close" }) {
   const paths = {
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
@@ -423,20 +441,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="brands" aria-label="Featured brands" data-reveal>
-        <p className="eyebrow">PRO BRANDS WE LOVE</p>
+      <section className="brands" id="brands" aria-label="Featured brands" data-reveal>
+        <p className="eyebrow">OUR BRANDS</p>
         <div className="brand-list">
-          {[
-            ["KOKOIST", "kokoist.png", "https://kokoist.com/"],
-            ["Akzentz", "akzentz.png", "https://akzentz.com/"],
-            ["Luminary Nail Systems", "luminary.png", "https://luminarynailsystems.com/"],
-            ["STALEKS", "staleks.png", "https://staleks.com/"],
-            ["ONAIL", "onail.png", "https://onail.com/"],
-            ["ULKA", "ulka.png", "https://www.ulka-global.com/"],
-            ["SMART PRO", "smartpro.png", "https://www.smartproair.com/"],
-          ].map(([name, image, href]) => (
-            <a href={href} key={name} target="_blank" rel="noopener noreferrer" aria-label={`${name} official website`}>
-              <Image src={`/images/brands/${image}`} alt={name} width={190} height={90} />
+          {brands.map(({ name, position }) => (
+            <a href={`${store}/search?q=${encodeURIComponent(name)}`} key={name} aria-label={`Shop ${name} at Nail Master Dallas`}>
+              <span className="brand-logo-sprite" style={{ backgroundPosition: position }} aria-hidden="true" />
             </a>
           ))}
         </div>
